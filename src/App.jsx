@@ -1,7 +1,7 @@
 import { useState } from "react";
 // import { useSinglePrismicDocument } from "@prismicio/react";
+// import FetchExample from "./components/FetchExample/FetchExample.jsx";
 import "./App.css";
-import FetchExample from "./components/FetchExample/FetchExample.jsx";
 
 export default function App() {
   // const state = useState();
@@ -37,10 +37,12 @@ export default function App() {
 
   return (
     <div>
-      <FetchExample></FetchExample>
+      {/* example fetch component */}
+      {/* <FetchExample></FetchExample> */}
+      {/* example image from prismic */}
+      {/* {state === "loaded" && <img src={document.data.hero_image.url} alt="" />} */}
       <input type="text" onInput={(e) => setInput(e.target.value)} />
       <h1>TODO: {input}</h1>
-      {/* {state === "loaded" && <img src={document.data.hero_image.url} alt="" />} */}
       <button onClick={handleClick}>Add todo</button>
       <ul>
         {todos.map((todo) => {
