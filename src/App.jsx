@@ -1,69 +1,61 @@
-import { useState } from "react";
-// import { useSinglePrismicDocument } from "@prismicio/react";
-// import FetchExample from "./components/FetchExample/FetchExample.jsx";
+import { useEffect, useState } from "react";
+import { supabaseClient } from "./supabase-client.js";
+import Signin from "./components/Signin/Signin.jsx";
 import "./App.css";
+import TodoList from "./components/TodoList/TodoList.jsx";
 
 export default function App() {
-  // const state = useState();
-  // const input = state[0];
-  // const setInput = state[1];
-  // const [document, { state }] = useSinglePrismicDocument("homepage");
-  const [input, setInput] = useState("Fare la spesa");
-  const [todos, setTodos] = useState([]);
+  const [session, setSession] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const handleClick = () => {
-    const id = todos.length + 1;
-    setTodos((prev) => [
-      ...prev,
-      {
-        id: id,
-        task: input,
-        completed: false,
-      },
-    ]);
-  };
-
-  const markDone = (id) => {
-    const list = todos.map((todo) => {
-      if (todo.id === id) {
-        todo.completed = !todo.completed;
-      }
-
-      return todo;
+  useEffect(() => {
+    supabaseClient.auth.getSession().then((data) => {
+      setSession(data.data.session);
     });
+  }, []);
 
-    setTodos(list);
-  };
+  useEffect(() => {
+    const getProfile = async () => {
+      // {
+      //   data {
+      //     user: {
+      //       id: "pollo",
+      //       token: '2asds'
+      //     }
+      //   }
+      // }
+      //const userData = await supabaseClient.auth.getUser();
+      // userData.data.user.id
+      // const { data } = await supabaseClient.auth.getUser();
+      // data.user.id
 
-  return (
-    <div>
-      {/* example fetch component */}
-      {/* <FetchExample></FetchExample> */}
-      {/* example image from prismic */}
-      {/* {state === "loaded" && <img src={document.data.hero_image.url} alt="" />} */}
-      <input type="text" onInput={(e) => setInput(e.target.value)} />
-      <h1>TODO: {input}</h1>
-      <button onClick={handleClick}>Add todo</button>
-      <ul>
-        {todos.map((todo) => {
-          return (
-            <li
-              key={todo.id}
-              style={{
-                listStyle: "none",
-                textDecoration: todo.completed ? "line-through" : "",
-              }}
-            >
-              <input
-                type="checkbox"
-                defaultChecked={todo.completed}
-                onChange={() => markDone(todo.id)}
-              />
-              {todo.task}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+      const {
+        data: { user },
+      } = await supabaseClient.auth.getUser();
+
+      const { data } = await supabaseClient
+        .from("profiles")
+        .upsert({ id: user.id })
+        .select();
+
+      setUser(data[0]);
+    };
+
+    getProfile();
+  }, [session]);
+
+  if (session) {
+    if (user && user.username) {
+      return (
+        <div>
+          <h1>Ciao {user.username}!</h1>
+          <TodoList />
+        </div>
+      );
+    } else {
+      return <h1>Completa il tuo profilo!</h1>;
+    }
+  } else {
+    return <Signin></Signin>;
+  }
 }
