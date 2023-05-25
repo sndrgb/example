@@ -38,7 +38,7 @@ const TodoList = () => {
       {/* <FetchExample></FetchExample> */}
       {/* example image from prismic */}
       {/* {state === "loaded" && <img src={document.data.hero_image.url} alt="" />} */}
-      {/* <input type="text" onInput={(e) => setInput(e.target.value)} />
+      <input type="text" onInput={(e) => setInput(e.target.value)} />
       <h1>TODO: {input}</h1>
       <button onClick={handleClick}>Add todo</button>
       <ul>
@@ -60,7 +60,7 @@ const TodoList = () => {
             </li>
           );
         })}
-      </ul> */}
+      </ul>
     </div>
   );
 };
