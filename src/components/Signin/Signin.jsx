@@ -38,7 +38,9 @@ const Signin = () => {
       <h1>Login!</h1>
       <form onSubmit={submitHandler}>
         <input type="email" name="email" onChange={handleInput} />
-        <button type="submit">Login</button>
+        <button disabled={isLoading} type="submit">
+          Login
+        </button>
       </form>
     </div>
   );

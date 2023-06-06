@@ -3,6 +3,7 @@ import { supabaseClient } from "./supabase-client.js";
 import Signin from "./components/Signin/Signin.jsx";
 import "./App.css";
 import TodoList from "./components/TodoList/TodoList.jsx";
+import UpdateProfile from "./components/UpdateProfile/UpdateProfile.jsx";
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -32,6 +33,7 @@ export default function App() {
       const {
         data: { user },
       } = await supabaseClient.auth.getUser();
+      if (!user) return;
 
       const { data } = await supabaseClient
         .from("profiles")
@@ -53,7 +55,7 @@ export default function App() {
         </div>
       );
     } else {
-      return <h1>Completa il tuo profilo!</h1>;
+      return <UpdateProfile />;
     }
   } else {
     return <Signin></Signin>;
