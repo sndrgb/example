@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabaseClient } from "./supabase-client.js";
-import Signin from "./components/Signin/Signin.jsx";
+
 import "./App.css";
+
+import Signin from "./components/Signin/Signin.jsx";
 import TodoList from "./components/TodoList/TodoList.jsx";
 import UpdateProfile from "./components/UpdateProfile/UpdateProfile.jsx";
 
@@ -46,11 +48,17 @@ export default function App() {
     getProfile();
   }, [session]);
 
+  const signOut = async () => {
+    await supabaseClient.auth.signOut();
+    setSession(null);
+  };
+
   if (session) {
     if (user && user.username) {
       return (
         <div>
           <h1>Ciao {user.username}!</h1>
+          <button onClick={signOut}>SIGNOUT</button>
           <TodoList />
         </div>
       );
