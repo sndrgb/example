@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabaseClient } from "../../supabase-client";
 
 const TodoList = () => {
@@ -8,6 +8,25 @@ const TodoList = () => {
   // const [document, { state }] = useSinglePrismicDocument("homepage");
   const [input, setInput] = useState("Fare la spesa");
   const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    const getTodos = async () => {
+      const {
+        data: { user },
+      } = await supabaseClient.auth.getUser();
+
+      const { data } = await supabaseClient
+        .from("todos")
+        .select()
+        .order("id", { ascending: false })
+        .eq("user_id", user?.id);
+
+      console.log(data);
+      setTodos(data);
+    };
+
+    getTodos();
+  }, []);
 
   const addTodo = async () => {
     const {
