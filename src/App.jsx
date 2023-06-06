@@ -53,19 +53,15 @@ export default function App() {
     setSession(null);
   };
 
-  if (session) {
-    if (user && user.username) {
-      return (
-        <div>
-          <h1>Ciao {user.username}!</h1>
-          <button onClick={signOut}>SIGNOUT</button>
-          <TodoList />
-        </div>
-      );
-    } else {
-      return <UpdateProfile />;
-    }
-  } else {
-    return <Signin></Signin>;
-  }
+  return (
+    <div>
+      <h1>Ciao {user?.username || "sconosciuto"}!</h1>
+      <p>{user?.bio}</p>
+      <p>{user?.website}</p>
+      <button onClick={signOut}>SIGNOUT</button>
+      {!session && <Signin />}
+      {session && user?.username && <TodoList />}
+      {session && !user?.username && <UpdateProfile />}
+    </div>
+  );
 }
